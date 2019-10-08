@@ -1,12 +1,12 @@
 from get_mesh_modes import *
 import numpy as np
-# from skimage import measure
-# import itertools
+import math
+import itertools
 from scipy.sparse.linalg import eigsh
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import seaborn as sb
-import math
+
 
 # test model definitions: mass positions
 model_verts = {
@@ -35,7 +35,7 @@ model_faces = {
 }
 
 
-def run_nma(model, verts=None, faces=None):
+def nma_test_model(model, verts=None, faces=None):
     
     if model is not None:
         verts = 10*model_verts[model]
@@ -79,7 +79,7 @@ def nma_polygon(r, N=100):
     ax.set_aspect('equal')
     plt.tight_layout()
     
-    verts, hess, w, v = run_nma(None, np.array(verts), faces)
+    verts, hess, w, v = nma_test_model(None, np.array(verts), faces)
     plt.figure()
     sb.distplot(w, kde=False, bins=20)
     draw_init_modes(verts, v, w)
