@@ -49,17 +49,6 @@ def get_hessian_from_mesh(verts, faces):
             
     return hess
     
-def get_mesh_from_mask(mask, ss=1, nuc_flag=False):
-
-    # get the vertices and faces of a traingular surface mesh created for voxelixed shape mask
-    verts, faces, normals, values = measure.marching_cubes_lewiner(mask, step_size=ss)
-    
-    if nuc_flag:
-      # fix z values, which were artifically inflated in taking z slices to create the mask
-      verts = fix_z(verts, 0.05, 200)
-    
-    return verts, faces
-    
     
 def get_eigs_from_mesh(verts, faces, save_flag = True):
 
