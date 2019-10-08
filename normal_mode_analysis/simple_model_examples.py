@@ -6,6 +6,7 @@ from scipy.sparse.linalg import eigsh
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import seaborn as sb
+import math
 
 # test model definitions: mass positions
 model_verts = {
@@ -34,12 +35,13 @@ model_faces = {
 }
 
 
-def run_nma(verts = None, faces=None):
+def run_nma(model, verts=None, faces=None):
     
-    verts = 10*model_verts[model]
-    faces = model_faces[model]
+    if model is not None:
+        verts = 10*model_verts[model]
+        faces = model_faces[model]
     
-    hess = get_hessian(verts, faces)  
+    hess = get_hessian_from_mesh(verts, faces)  
     w, v = np.linalg.eigh(hess)
     
     d = np.matmul(np.linalg.inv(v),np.matmul(hess,v))
@@ -57,11 +59,39 @@ def run_nma(verts = None, faces=None):
     return verts, hess, w, v
 
 
+
+def nma_polygon(r, N=100):
+
+    def generate_circle_mesh(r, N):
+        verts = [np.array((math.cos(2*np.pi/N*x)*r, math.sin(2*np.pi/N*x)*r)) for x in range(0,N)]
+        faces = []
+        for i in range(N-1):
+            faces.append([i, i+1])
+        faces.append([N-1,0])
+        return verts, faces
+    
+    verts, faces = generate_circle_mesh(r, N)
+    
+    x = [verts[i][0] for i in range(len(verts))]
+    y = [verts[i][1] for i in range(len(verts))]
+    plt.scatter(x,y)
+    ax = plt.gca()
+    ax.set_aspect('equal')
+    plt.tight_layout()
+    
+    verts, hess, w, v = run_nma(None, np.array(verts), faces)
+    plt.figure()
+    sb.distplot(w, kde=False, bins=20)
+    draw_init_modes(verts, v, w)
+
+
 def draw_mode(verts, v2, axis=None):
     
     if axis is None:
         plt.figure()
         axis = plt.gca()
+        
+    ndim = verts[0].shape[0]
         
     # get x (and y if ndim=2) coordinates for initial mass positions and draw initial shape
     x = []
