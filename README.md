@@ -1,23 +1,8 @@
 # normal_mode_analysis
 
-[![Build Status](https://github.com/jcass11/normal_mode_analysis/workflows/Build%20Master/badge.svg)](https://github.com/jcass11/normal_mode_analysis/actions)
-[![Code Coverage](https://codecov.io/gh/jcass11/normal_mode_analysis/branch/master/graph/badge.svg)](https://codecov.io/gh/jcass11/normal_mode_analysis)
-
-Python Boilerplate contains all the boilerplate you need to create a Python package.
+The shape of the iPSC nucleus is dynamic in time and varies across colonies; while this is likely driven in concert by many aspects of the cell state (including mitotic stage, cytoskeleton dynamics, and neighbor cell dynamics), we do not know the relative impact of the mechanisms in driving variations in nuclear shape. In this project, we aim to link our observations of nuclear shape variations to specific mechanisms by pairing data-driven analyses of observed iPSC shape variation with theory-based models predicting the dynamics driven by biophysical mechanisms. The natural, resting shape of any flexible structure determines the ways in which it is most likely to bend and stretch; modeling of these resonance-based shape variations, called “normal mode analysis (NMA),” has been applied on varying spatial scales to successfully predict the most likely conformational changes of proteins and seismological oscillations of the Earth’s surface. We begin our theoretical model of iPSC nuclear shape variation by using NMA to predict the natural resonant dynamics for our cells’ nuclei. By comparing these predicted shape variations to quantitative analysis of observed deformations of our nuclei from time-lapse microscopy, we provide an important baseline for understanding the mechanisms driving the variation of nuclear shape.
 
 ---
-
-## Features
-* Store values and retain the prior value in memory
-* ... some other functionality
-
-## Quick Start
-```python
-from normal_mode_analysis import Example
-
-a = Example()
-a.get_value()  # 10
-```
 
 ## Installation
 **Stable Release:** `pip install normal_mode_analysis`<br>
@@ -25,58 +10,6 @@ a.get_value()  # 10
 
 ## Development
 See [CONTRIBUTING.md](CONTRIBUTING.md) for information related to developing the code.
-
-#### The Three Commands You Need To Know
-1. `make build`
-
-    This will run `tox` which will run all your tests in both Python 3.6 and Python 3.7 as well as linting your code.
-
-2. `make clean`
-
-    This will clean up various Python and build generated files so that you can ensure that you are working in a clean
-    environment.
-
-3. `make docs`
-
-    This will generate and launch a web browser to view the most up-to-date documentation for your Python package.
-
-#### Suggested Git Branch Strategy
-1. `master` is for the most up-to-date development, very rarely should you directly commit to this branch. GitHub
-Actions will run on every push and on a CRON to this branch but still recommended to commit to your development
-branches and make pull requests to master.
-2. `stable` is for releases only. When you want to release your project on PyPI, simply make a PR from `master` to
-`stable`, this template will handle the rest as long as you have added your PyPI information described in the above
-**Optional Steps** section.
-3. Your day-to-day work should exist on branches separate from `master`. Even if it is just yourself working on the
-repository, make a PR from your working branch to `master` so that you can ensure your commits don't break the
-development head. GitHub Actions will run on every push to any branch or any pull request from any branch to any other
-branch.
-
-#### Additional Optional Setup Steps:
-* Register normal_mode_analysis with Codecov:
-  * Make an account on [codecov.io](https://codecov.io) (Recommended to sign in with GitHub)
-  * Select `jcass11` and click: `Add new repository`
-  * Copy the token provided, go to your [GitHub repository's settings and under the `Secrets` tab](https://github.com/jcass11/normal_mode_analysis/settings/secrets), add a secret called
-  `CODECOV_TOKEN` with the token you just copied. Don't worry, no one will see this token because it will be encrypted.
-* Register your project with PyPI:
-  * Make an account on [pypi.org](https://pypi.org)
-  * Go to your [GitHub repository's settings and under the `Secrets` tab](https://github.com/jcass11/normal_mode_analysis/settings/secrets),
-  add a secret called `PYPI_TOKEN` with your
-  password for your PyPI account. Don't worry, no one will see this password because it will be encrypted.
-  * Next time you push to the branch: `stable`, GitHub actions will build and deploy your Python package to PyPI.
-  * _Recommendation: Prior to pushing to `stable` it is recommended to install and run `bumpversion` as this will,
-  tag a git commit for release and update the `setup.py` version number._
-* Add branch protections to `master` and `stable`
-    * To protect from just anyone pushing to `master` or `stable` (the branches with more tests and deploy
-    configurations)
-    * Go to your [GitHub repository's settings and under the `Branches` tab](https://github.com/jcass11/normal_mode_analysis/settings/branches), click `Add rule` and select the
-    settings you believe best.
-    * _Recommendations:_
-      * _Require pull request reviews before merging_
-      * _Require status checks to pass before merging (Select all, as administrator of the repo you can override)_
-      * _Include administrators_
-      * _Restrict who can push to matching branches_
-* Add the repo to your ReadTheDocs account + turn on the ReadTheDocs service hook.
 
 
 ***Free software: Allen Institute Software License***
