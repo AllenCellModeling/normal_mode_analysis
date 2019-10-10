@@ -13,20 +13,35 @@ sb.set_palette(sb.color_palette("Set2"))
 color_list = sb.color_palette("Set2")*255
 
 
-# test model definitions: mass positions
+# test model definitions: mass positions/ mesh vertices
 model_verts = {
+    
+    # 1D 2 mass line
     '1D_2m': np.array([[0.], [1.] ]),
+    
+    # 1D 3 mass line
     '1D_3m': np.array([[0.,], [1.,], [2., ] ]),
+    
+    # 3D 2 mass line
     '3D_2m': np.array([[0., 0., 0.], [1., 0., 0.] ]),
+    
+    # 2D square
     '2D_sq': np.array([[0.,0.], [0., 1.], [1.,1.], [1.,0.] ]),
-    '2D_rt': np.array([[0.,0.], [0., 2.], [1.,2.], [1.,0.] ]),
+    
+    # 2D rectangle
     '2D_rt2': np.array([[0.,0.], [0., 1.], [0., 2.], [1.,2.], [1.,1.], [1.,0.] ]),
+    
+    # 3D cube
     '3D_cb': np.array([[0.,0.,0.], [0., 1.,0,], [1.,1.,0.], [1.,0.,0.],[0.,0.,1.], [0., 1.,1,], [1.,1.,1.], [1.,0.,1.] ]),
+    
+    # 2D triangle
     '2D_tr': np.array([[1.,0.], [0.5, np.sqrt(3)/2.], [0.,0.], ]),
+    
+    # 3D tetrahedron
     '3D_th': np.array([[1.,0.,0.], [0.5, np.sqrt(3)/2.,0.], [0.,0.,0.], [np.sqrt(3)/2., np.sqrt(3)/2., 1.] ])
 }
 
-# test model definitions: mass connectivities
+# test model definitions: mass/mesh connectivities (same naming convention as written out above)
 model_faces = {
     '1D_2m': [[0,1],],
     '1D_3m': [[0,1],[1,2]],
@@ -41,10 +56,12 @@ model_faces = {
 
     
 def fully_connect_mesh(verts):
+    """Connects all vertices in input mesh to all other vertices. Returns faces."""
     return list(itertools.combinations(range(len(verts)),2))
 
 
 def check_diagonalization(v, hess):
+    """Returns diagonalized version of Hessian (eigenvalues are along diagonal)."""
     
     d = np.matmul(np.linalg.inv(v),np.matmul(hess,v))
     d[d<10**-5] = 0
@@ -52,6 +69,7 @@ def check_diagonalization(v, hess):
 
 
 def check_orthogonality(v):
+    """Returns True if all eigenvectors (columns of v) are normal to one another, false otherwise."""
     
     for indpair in list(itertools.combinations(range(v.shape[0]), 2)):
         a = indpair[0]
@@ -62,6 +80,7 @@ def check_orthogonality(v):
 
 
 def nma_test_model(model, verts=None, faces=None, fully_connect=False):
+    """Uses mesh to find hessian, then calculate its eigenvectors/values to define normal modes."""
     
     if model is not None:
         verts = model_verts[model]
@@ -81,6 +100,7 @@ def nma_test_model(model, verts=None, faces=None, fully_connect=False):
 
 
 def nma_polygon(r, N=100, fully_connect=False, draw=False):
+    """Generates N-sided polygon (which may or may not be fully-connected) and runs nma_test_model on it."""
 
     def generate_circle_mesh(r, N):
         verts = [np.array((math.cos(2*np.pi/N*x)*r, math.sin(2*np.pi/N*x)*r)) for x in range(0,N)]
@@ -106,6 +126,7 @@ def nma_polygon(r, N=100, fully_connect=False, draw=False):
 
 
 def draw_shape(verts, faces, c, axis=None):
+    """Draws mesh."""
     if axis is None:
         plt.figure()
         axis = plt.gca()
@@ -124,6 +145,7 @@ def draw_shape(verts, faces, c, axis=None):
 
 
 def draw_mode(verts, faces, v2, axis=None):
+    """Draws inital mesh shape, normal mode, and eigenvectors that take you from one to the other."""
     
     if axis is None:
         fig = plt.figure(figsize = [3,3])
@@ -161,6 +183,8 @@ def draw_mode(verts, faces, v2, axis=None):
     return axis
 
 def draw_init_modes(verts, faces, v, w):
+    """Draws the raw eigenvectors generate by noraml mode analysis (before projecting things out)."""
+    
     # calculate number of spatial dimensions and number of points
     ndim = verts[0].shape[0]
     npts = verts.shape[0]
