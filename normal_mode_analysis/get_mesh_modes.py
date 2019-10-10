@@ -4,7 +4,11 @@ from scipy.sparse.linalg import eigsh
 
 
 def get_hessian_from_mesh(verts, faces):
-    """Find Hessian for mesh defined by input vertices and faces."""
+    """Find Hessian for mesh defined by input vertices and faces.
+    :param verts: vertices of mesh
+    :param faces: faces of mesh
+    :return: hessian matrix describing connectivity of mesh
+    """
     
     # create hessian matrix of size 3N, allowing each pair of points to have x,y,z components
     ndim = int(verts[0].shape[0])
@@ -51,7 +55,12 @@ def get_hessian_from_mesh(verts, faces):
     
     
 def get_eigs_from_mesh(verts, faces, save_flag = True):
-    """Get eigenvalues and eigenvectors of hessian, calculated from vertices and faces defining mesh."""
+    """Get eigenvalues and eigenvectors of hessian, calculated from vertices and faces defining mesh.
+    :param verts: vertices of mesh
+    :param faces: faces of mesh
+    :param save_flag: flag to save eigenvalues and eigenvectors to file
+    :return: hessian, and its eigenvalues (w) and eigenvectors (v) (v[:,i] correcsponds to w[i])
+    """
 
     # calculate hessian from faces and vertices as initial conditions with zero potential energy (rest shape)
     mat = get_hessian(verts, faces)
