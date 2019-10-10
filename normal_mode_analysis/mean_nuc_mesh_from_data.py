@@ -27,7 +27,7 @@ def create_csv_from_database():
     df = prod.get_dataset(id=304).ds
     df.to_csv("nucleus_timelapse.csv")
 	
-	return df
+    return df
 
 
 def get_mask_from_mesh(polydata, imsize, dz):
@@ -104,11 +104,11 @@ def get_mean_mesh(mask):
             vert[2] *= dz
         return verts
 
-	verts, faces, normals, values = measure.marching_cubes_lewiner(mask)
+    verts, faces, normals, values = measure.marching_cubes_lewiner(mask)
     nverts = verts.shape[0]
     verts = fix_z(verts, 0.05, 200)
 	
-	return verts, faces
+    return verts, faces
 	
     
 def get_mean_mesh_from_individual_meshes(200, 0.1):
