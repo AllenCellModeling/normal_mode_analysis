@@ -5,8 +5,7 @@ The shape of the iPSC nucleus is dynamic in time and varies across colonies; whi
 ---
 
 ## Installation
-**Stable Release:** `pip install normal_mode_analysis`<br>
-**Development Head:** `pip install git+https://github.com/jcass11/normal_mode_analysis.git`
+`pip install git+https://github.com/jcass11/normal_mode_analysis.git`
 
 ## Development
 See [CONTRIBUTING.md](CONTRIBUTING.md) for information related to developing the code.
