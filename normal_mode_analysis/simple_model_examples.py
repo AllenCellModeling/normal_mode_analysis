@@ -125,6 +125,10 @@ def draw_shape(verts, faces, c, axis=None):
 
 def draw_mode(verts, faces, v2, axis=None):
     
+    if axis is None:
+        fig = plt.figure(figsize = [3,3])
+        axis = plt.gca()
+    
     nv = verts.shape[0]    
     ndim = verts[0].shape[0]
     axis = draw_shape(verts, faces, color_list[0], axis)
@@ -139,8 +143,6 @@ def draw_mode(verts, faces, v2, axis=None):
     verts_new = np.asarray(verts_new)
     axis = draw_shape(verts_new, faces, color_list[1], axis)
 
-    axis.set_aspect('equal')
-
     # draw eigenvectors as arrows from initial to new positions
     for i in range(nv):
 
@@ -153,7 +155,10 @@ def draw_mode(verts, faces, v2, axis=None):
             y = 0
             dy = 0
         if dx!=0 or dy!=0:
-            axis.arrow(x,y,dx,dy, head_width=0.2, fc='k')
+            axis.arrow(x,y,dx,dy, head_width=0.2, fc='k')    
+    axis.set_aspect('equal')
+    
+    return axis
 
 def draw_init_modes(verts, faces, v, w):
     # calculate number of spatial dimensions and number of points
@@ -161,7 +166,7 @@ def draw_init_modes(verts, faces, v, w):
     npts = verts.shape[0]
 
     # set up axes to plot all normal modes
-    psize = 5
+    psize = 3
     fig, ax = plt.subplots(figsize=[psize*ndim,psize*npts], nrows=npts, ncols=ndim)
 
     # cycle through all normal modes (N = npts*ndim)
