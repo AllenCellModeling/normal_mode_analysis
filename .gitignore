@@ -27,6 +27,7 @@ wheels/
 
 # OS generated files
 .DS_Store
+._.DS_Store
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
