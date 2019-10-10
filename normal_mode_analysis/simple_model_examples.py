@@ -6,6 +6,8 @@ from scipy.sparse.linalg import eigsh
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import seaborn as sb
+import warnings
+warnings.filterwarnings("ignore")
 
 sb.set_palette(sb.color_palette("Set2"))
 color_list = sb.color_palette("Set2")*255
