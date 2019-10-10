@@ -56,12 +56,19 @@ model_faces = {
 
     
 def fully_connect_mesh(verts):
-    """Connects all vertices in input mesh to all other vertices. Returns faces."""
+    """Connects all vertices in input mesh to all other vertices. Returns faces.
+    :param verts: mesh vertices
+    :return: faces of mesh, connecting all vertices to all others
+    """
     return list(itertools.combinations(range(len(verts)),2))
 
 
 def check_diagonalization(v, hess):
-    """Returns diagonalized version of Hessian (eigenvalues are along diagonal)."""
+    """Returns diagonalized version of Hessian (eigenvalues are along diagonal).
+    :param v: matrix of all eigenvectors
+    :param hess: hessian matrix of mesh
+    :return: diagonalized hessian with eigenvalues along diagonal
+    """
     
     d = np.matmul(np.linalg.inv(v),np.matmul(hess,v))
     d[d<10**-5] = 0
@@ -69,7 +76,10 @@ def check_diagonalization(v, hess):
 
 
 def check_orthogonality(v):
-    """Returns True if all eigenvectors (columns of v) are normal to one another, false otherwise."""
+    """Check whether all eigenevectors are orthogonal to all others.
+    :param v: matrix of all eigenvectors
+    :return: True if all eigenvectors (columns of v) are normal to one another, false otherwise.
+    """
     
     for indpair in list(itertools.combinations(range(v.shape[0]), 2)):
         a = indpair[0]
@@ -80,7 +90,13 @@ def check_orthogonality(v):
 
 
 def nma_test_model(model, verts=None, faces=None, fully_connect=False):
-    """Uses mesh to find hessian, then calculate its eigenvectors/values to define normal modes."""
+    """Uses mesh to find hessian, then calculate its eigenvectors/values to define normal modes.
+    :param model: string indicating a model mass system
+    :param verts: mesh vertices
+    :param faces: mesh faces
+    :param fully_connect: flag to take model or input vertices and generate fully connected mesh
+    :return: mesh vertices and faces, hessian of mesh, and hessian eigenvalues (w) and vectors (v)
+    """
     
     if model is not None:
         verts = model_verts[model]
@@ -100,7 +116,13 @@ def nma_test_model(model, verts=None, faces=None, fully_connect=False):
 
 
 def nma_polygon(r, N=100, fully_connect=False, draw=False):
-    """Generates N-sided polygon (which may or may not be fully-connected) and runs nma_test_model on it."""
+    """Generates N-sided polygon (which may or may not be fully-connected) and runs nma_test_model on it.
+    :param r: radius of polygon
+    :param N: number of sides of polygon
+    :param fully_connect: flag to take model or input vertices and generate fully connected mesh
+    :param draw: flag to draw all normal modes and histogram of their frequencies
+    :return: eigenvalues and eigenvectors
+    """
 
     def generate_circle_mesh(r, N):
         verts = [np.array((math.cos(2*np.pi/N*x)*r, math.sin(2*np.pi/N*x)*r)) for x in range(0,N)]
@@ -126,7 +148,13 @@ def nma_polygon(r, N=100, fully_connect=False, draw=False):
 
 
 def draw_shape(verts, faces, c, axis=None):
-    """Draws mesh."""
+    """Draws mesh.
+    :param verts: mesh vertices
+    :param faces: mesh faces
+    :param c: color to draw shape lines
+    :param axis: axis to draw shape on
+    :return: axis shape is drawn on
+    """
     if axis is None:
         plt.figure()
         axis = plt.gca()
@@ -145,7 +173,13 @@ def draw_shape(verts, faces, c, axis=None):
 
 
 def draw_mode(verts, faces, v2, axis=None):
-    """Draws inital mesh shape, normal mode, and eigenvectors that take you from one to the other."""
+    """Draws inital mesh shape, normal mode, and eigenvectors that take you from one to the other.
+    :param verts: mesh vertices
+    :param faces: mesh faces
+    :param v2: eigenvector for this mode
+    :param axis: axis to draw shape on
+    :return: axis shape is drawn on
+    """
     
     if axis is None:
         fig = plt.figure(figsize = [3,3])
@@ -183,7 +217,12 @@ def draw_mode(verts, faces, v2, axis=None):
     return axis
 
 def draw_init_modes(verts, faces, v, w):
-    """Draws the raw eigenvectors generate by noraml mode analysis (before projecting things out)."""
+    """Draws the raw eigenvectors generate by noraml mode analysis (before projecting things out).
+    :param verts: mesh vertices
+    :param faces: mesh faces
+    :param v: eigenvectors representing normal modes of mesh
+    :param w: eigenvalues representing frequencies of normal modes
+    """
     
     # calculate number of spatial dimensions and number of points
     ndim = verts[0].shape[0]
