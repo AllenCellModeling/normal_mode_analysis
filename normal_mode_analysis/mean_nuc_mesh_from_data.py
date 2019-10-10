@@ -23,20 +23,24 @@ from shapely.geometry import Point
 
 
 def create_csv_from_database():
+    """Download nuclear mesh databse with dsdb and save in repo."""
 	prod = dsdb.DatasetDatabase(config="~/.config_dsdb.json")
 	df = prod.get_dataset(id=304).ds
-	df.to_csv("nucleus_timelapse.csv")
+	df.to_csv("mesh_vtk_files/nucleus_timelapse.csv")
 	
 	return df
 
 
 def get_mask_from_mesh(polydata, imsize, dz):
+    """Given a polydata mesh, create a binary 3D mask, centered on the mask image center."""
 
 	def get_cell_vert_array(i, polydata):
+        """Get vertices of nuclear mesh."""
 		cell = polydata.GetCell(i)
 		ids = cell.GetPointIds()
 		return np.array([ids.GetId(j) for j in range(ids.GetNumberOfIds())])
 
+    # Collect all faces and vertices into arrays and shift vertices to be centered with mask image
 	faces = np.array([get_cell_vert_array(i, polydata) for i in range(polydata.GetNumberOfCells())])
 	verts = np.array([np.array(polydata.GetPoint(i)) for i in range(polydata.GetNumberOfPoints())])
 	verts_shift = verts + imsize/2
@@ -46,6 +50,7 @@ def get_mask_from_mesh(polydata, imsize, dz):
 	zmax = max(z_list)
 	
 	def get_zslice(n):
+        """Use meshcut to get z slices of mesh, create 2D masks of each slice, and combine slices to get 3D mask."""
 
 		im = Image.fromarray(np.zeros((imsize,imsize), np.uint8).T)
 
@@ -66,8 +71,10 @@ def get_mask_from_mesh(polydata, imsize, dz):
 
 	
 def get_mean_mask(df, imsize, dz):
+    """Given many meshes in df, find the average binary image mask of all meshes."""
 	
 	def get_mesh(i):
+        """Read database to get one mesh as polydata."""
 		reader = vtk.vtkPolyDataReader()
         # read in a specific file
 		reader.SetFileName('mesh_vtk_files/'+df['CellId'][i]+'.vtk')
@@ -90,6 +97,7 @@ def get_mean_mask(df, imsize, dz):
 	
 	
 def get_mean_mesh(mask):
+    """Get mesh from mean mask, correcting z coordinates from zslice indexes to spatial values consistent with x/y."""
 
 	def fix_z(verts, dz, imsize):
 		nz = np.round(imsize/dz)
@@ -106,13 +114,15 @@ def get_mean_mesh(mask):
 	
     
 def get_mean_mesh_from_individual_meshes(df, imsize=200, dz=0.05):
+    """Master function, getting mean mesh shape from df of meshes."""
 	mask = get_mean_mask(df, imsize, dz)
 	verts, faces = get_mean_mesh(mask)
 	np.save(verts,'nuc_verts')
-	np.sace(faces, 'nuc_faces')
+	np.save(faces, 'nuc_faces')
 
 
 def plot_nuc_mask(mask, title, az):
+    """Plut mask in stripes on 3D axes."""
 
 	fig = plt.figure()
 	ax = plt.axes(projection="3d")
@@ -129,6 +139,8 @@ def plot_nuc_mask(mask, title, az):
 	
 	
 def make_nuc_video(mask, filename):
+    """Generate movie of striped mask rotating around z-axis."""
+    
 	images = []
 	for i in np.linspace(0, 360, 25):
 		filename = 'az_'+str(int(i))+'.png'
