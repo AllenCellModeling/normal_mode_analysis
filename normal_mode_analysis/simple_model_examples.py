@@ -53,11 +53,8 @@ def nma_test_model(model, verts=None, faces=None):
         b = indpair[1]
         c = np.dot(v[:,a], v[:,b])
         if np.abs(c)<10**-5: c = 0 
-    # print the number of eigenvector pairs which are not normal        
-    print('Number of eigenvectors which fail normality check: '+str(np.sum(c)))
     
     return verts, hess, w, v
-
 
 
 def nma_polygon(r, N=100):
@@ -83,6 +80,10 @@ def nma_polygon(r, N=100):
     plt.figure()
     sb.distplot(w, kde=False, bins=20)
     draw_init_modes(verts, v, w)
+    
+    
+def fully_connect_mesh(verts):
+    return list(itertools.combinations(range(len(verts)),2))
 
 
 def draw_mode(verts, v2, axis=None):
