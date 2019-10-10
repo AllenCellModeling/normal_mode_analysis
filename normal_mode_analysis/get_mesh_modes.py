@@ -1,5 +1,4 @@
 import numpy as np
-from skimage import measure
 import itertools
 from scipy.sparse.linalg import eigsh
 
