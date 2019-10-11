@@ -66,7 +66,7 @@ def get_mask_from_mesh(polydata, imsize, dz):
 
 		if zmin < n < zmax:
 			cut = meshcut.cross_section(verts_shift, faces, [0,0,n], [0,0,1])
-			polygon = cut[0][:, :2] # discard z values, they are all the same
+			polygon = cut[0][:, :2]
 
 			draw = ImageDraw.Draw(im)
 			draw.polygon(polygon.round().astype(np.uint8).flatten().tolist(), fill=255)
