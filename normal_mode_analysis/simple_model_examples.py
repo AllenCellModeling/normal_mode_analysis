@@ -114,7 +114,6 @@ def nma_test_model(model, verts=None, faces=None, fully_connect=False):
     return verts, faces, hess, w, v
 
 
-
 def nma_polygon(r, N=100, fully_connect=False, draw=False):
     """Generates N-sided polygon (which may or may not be fully-connected) and runs nma_test_model on it.
     :param r: radius of polygon
@@ -215,6 +214,7 @@ def draw_mode(verts, faces, v2, axis=None):
     axis.set_aspect('equal')
     
     return axis
+
 
 def draw_init_modes(verts, faces, v, w):
     """Draws the raw eigenvectors generate by noraml mode analysis (before projecting things out).
