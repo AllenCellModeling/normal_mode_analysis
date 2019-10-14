@@ -49,7 +49,7 @@ requirements = [
     "matplotlib",
     "seaborn",
     "vtk",
-    "stl",
+    "numpy-stl",
     "scikit-image",
     "meshcut",
     "imageio"
