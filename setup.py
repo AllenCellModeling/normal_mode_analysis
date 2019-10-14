@@ -49,7 +49,6 @@ requirements = [
     "itertools",
     "scipy",
     "matplotlib",
-    "itertools",
     "seaborn",
     "vtk",
     "stl",
