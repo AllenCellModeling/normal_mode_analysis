@@ -42,7 +42,24 @@ interactive_requirements = [
     "matplotlib",
 ]
 
-requirements = []
+requirements = [
+    "numpy",
+    "pandas",
+    "math",
+    "itertools",
+    "scipy",
+    "matplotlib",
+    "itertools",
+    "mpl_toolkits",
+    "seaborn",
+    "vtk",
+    "stl",
+    "skimage",
+    "PIL",
+    "meshcut",
+    "imageio",
+    "os"
+]
 
 extra_requirements = {
     "test": test_requirements,
