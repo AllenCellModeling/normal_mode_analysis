@@ -115,6 +115,12 @@ def get_mean_mask(df, imsize, dz):
 
 
 def fix_z(verts, dz, imsize):
+	"""Fix z coordinates by rescaling from integers to physical values
+	:param verts: mesh vertices
+	:param dz: true z spacing of slices
+	:param imsize: original image size in z
+	:return: rescale vertices with correct z coordinates
+	"""
 		nz = np.round(imsize/dz)
 		dz = imsize/nz
 		for vert in verts:
