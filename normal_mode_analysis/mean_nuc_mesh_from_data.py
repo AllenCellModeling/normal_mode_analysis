@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 
 import vtk
+from stl import mesh
 
 from skimage import io as skio
 from skimage import measure
@@ -121,11 +122,12 @@ def fix_z(verts, dz, imsize):
 	:param imsize: original image size in z
 	:return: rescale vertices with correct z coordinates
 	"""
-		nz = np.round(imsize/dz)
-		dz = imsize/nz
-		for vert in verts:
-			vert[2] *= dz
-		return verts
+
+	nz = np.round(imsize/dz)
+	dz = imsize/nz
+	for vert in verts:
+		vert[2] *= dz
+	return verts
 	
 	
 def get_mean_mesh(mask):
@@ -166,8 +168,7 @@ def plot_nuc_mask(mask, title=None, az=None):
 		ax.view_init(azim=az)
 
 	verts, faces, normals, values = measure.marching_cubes_lewiner(mask)
-	nverts = verts.shape[0]
-	verts = fix_z(verts, 0.05, 200)
+	verts = fix_z(verts, dz, imsize)
 	x, y, z = verts.T
 	ax.plot_trisurf(x, y, faces, z, lw=0, cmap=plt.cm.Paired)
 
@@ -189,3 +190,15 @@ def make_nuc_video(mask, filename):
 		images.append(imageio.imread(filename))
 		os.remove(filename)
 	imageio.mimsave(filename+'.gif', images)
+
+
+def save_mesh_as_stl(verts, faces, fname):
+	
+	# Create the stl Mesh object
+	nuc_mesh = mesh.Mesh(np.zeros(faces.shape[0], dtype=mesh.Mesh.dtype))
+	for i, f in enumerate(faces):
+		for j in range(3):
+			nuc_mesh.vectors[i][j] = verts[f[j],:]
+
+	# Write the mesh to file"
+	nuc_mesh.save(fname+'.stl')
