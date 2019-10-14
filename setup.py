@@ -50,7 +50,6 @@ requirements = [
     "scipy",
     "matplotlib",
     "itertools",
-    "mpl_toolkits",
     "seaborn",
     "vtk",
     "stl",
