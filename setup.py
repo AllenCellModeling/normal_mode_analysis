@@ -45,7 +45,6 @@ interactive_requirements = [
 requirements = [
     "numpy",
     "pandas",
-    "math",
     "scipy",
     "matplotlib",
     "seaborn",
