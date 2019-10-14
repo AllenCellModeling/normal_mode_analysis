@@ -54,7 +54,7 @@ requirements = [
     "seaborn",
     "vtk",
     "stl",
-    "skimage",
+    "scikit-image",
     "meshcut",
     "imageio"
 ]
