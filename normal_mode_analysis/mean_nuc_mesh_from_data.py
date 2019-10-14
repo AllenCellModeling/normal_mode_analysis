@@ -112,6 +112,14 @@ def get_mean_mask(df, imsize, dz):
 
 	np.save('mean_nuc_mask', mean_mask)
 	return mean_mask
+
+
+def fix_z(verts, dz, imsize):
+		nz = np.round(imsize/dz)
+		dz = imsize/nz
+		for vert in verts:
+			vert[2] *= dz
+		return verts
 	
 	
 def get_mean_mesh(mask):
@@ -119,13 +127,6 @@ def get_mean_mesh(mask):
 	:param mask: 3D binary image mask of average nuclear shape
 	:return: vertices and faces of mesh generated from mask
 	"""
-
-	def fix_z(verts, dz, imsize):
-		nz = np.round(imsize/dz)
-		dz = imsize/nz
-		for vert in verts:
-			vert[2] *= dz
-		return verts
 
 	verts, faces, normals, values = measure.marching_cubes_lewiner(mask)
 	nverts = verts.shape[0]
