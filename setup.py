@@ -57,8 +57,7 @@ requirements = [
     "skimage",
     "PIL",
     "meshcut",
-    "imageio",
-    "os"
+    "imageio"
 ]
 
 extra_requirements = {
