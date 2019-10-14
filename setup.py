@@ -55,7 +55,6 @@ requirements = [
     "vtk",
     "stl",
     "skimage",
-    "PIL",
     "meshcut",
     "imageio"
 ]
