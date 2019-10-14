@@ -46,7 +46,6 @@ requirements = [
     "numpy",
     "pandas",
     "math",
-    "itertools",
     "scipy",
     "matplotlib",
     "seaborn",
