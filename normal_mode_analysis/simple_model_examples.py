@@ -61,31 +61,39 @@ model_faces = {
 }
 
 
-def generate_3d_shell(n, r=1):
-	"""Get x, y, and z coordinates of uniformly sampled points on a 3D shell
-	:param n: number of subdivisions
-	:param r: radius of shell
-	:return: lists of x, y, and z coordinates of points on shell surface
-	"""
+def trimesh_3D_surface(r, ss, fig_flag=True):
+    """Create 3D surface mesh that approaches a sphere as vertices are added.
+    :param r: sphere radius
+    :param ss: step size for marching cubes meshing
+    :param fig_flag: toggle whether to scatter plot mesh vertices
+    :return: vertices and faces of resulting mesh
+    """
+    
+    # Create spherical mask
+    size=2*r+3
+    center = np.array([(size-1)/2, (size-1)/2, (size-1)/2])
+    mask = np.zeros((size,size,size))
+    for i in range(size):
+        for j in range(size):
+            for k in range(size):
+                if np.linalg.norm(np.array([i,j,k])-center)<=r:
+                    mask[i,j,k] = 1
+                    
+    # mesh the mask into verts and faces
+    verts, faces, n, v = measure.marching_cubes_lewiner(mask, step_size=ss)
+    print("number of vertices: "+str(verts.shape[0]))
+    
+    # Plot verices (optional)
+    if fig_flag:
+        x = [verts[i][0] for i in range(verts.shape[0])]
+        y = [verts[i][1] for i in range(verts.shape[0])]
+        z = [verts[i][2] for i in range(verts.shape[0])]
 
-	alpha = 4.0*np.pi*r*r/n
-	d = np.sqrt(alpha)
-	m_nu = int(np.round(np.pi/d))
-	d_nu = np.pi/m_nu
-	d_phi = alpha/d_nu
-
-	x = []
-	y = []
-	z = []
-	for m in range (0,m_nu):
-		nu = np.pi*(m+0.5)/m_nu
-		m_phi = int(np.round(2*np.pi*np.sin(nu)/d_phi))
-		for n in range (0,m_phi):
-			phi = 2*np.pi*n/m_phi
-			x.append(r*np.sin(nu)*np.cos(phi))
-			y.append(r*np.sin(nu)*np.sin(phi))
-			z.append(r*np.cos(nu))
-	return x, y, z
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.scatter(x,y,z)
+        
+    return verts, faces
 
     
 def fully_connect_mesh(verts):
