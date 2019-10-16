@@ -13,6 +13,7 @@ color_list = sb.color_palette("Set2")*255
 
 
 # test model definitions: mass positions/ mesh vertices
+ico = (1 + np.sqrt(5)) / 2
 model_verts = {
     
     # 1D 2 mass line
@@ -37,7 +38,12 @@ model_verts = {
     '2D_tr': np.array([[1.,0.], [0.5, np.sqrt(3)/2.], [0.,0.], ]),
     
     # 3D tetrahedron
-    '3D_th': np.array([[1.,0.,0.], [0.5, np.sqrt(3)/2.,0.], [0.,0.,0.], [np.sqrt(3)/2., np.sqrt(3)/2., 1.] ])
+    '3D_th': np.array([[1.,0.,0.], [0.5, np.sqrt(3)/2.,0.], [0.,0.,0.], [np.sqrt(3)/2., np.sqrt(3)/2., 1.] ]),
+	
+	# 3D icosahedron
+	'3D_ico': np.array([[-1, ico, 0], [1, ico, 0], [-1, -ico, 0], [1, -ico, 0], [0, -1, ico], [0, 1, ico], [0, -1, -ico], [0, 1, -ico], 
+						[ico, 0, -1], [ico, 0, 1], [-ico, 0, -1], [-ico, 0, 1]])
+
 }
 
 # test model definitions: mass/mesh connectivities (same naming convention as written out above)
@@ -51,7 +57,35 @@ model_faces = {
     '3D_cb': [[0,1], [1,2], [2,3], [3,0], [4,5], [5,6], [6,7], [7,0], [0,4], [1,5], [2,6], [3,7]],
     '2D_tr': [[0,1], [1,2], [2,0]],
     '3D_th': [[0,1], [1,2], [2,0], [0,3], [1,3], [2,3]],
+	'3D_ico': [ [0, 11, 5], [0, 5, 1], [0, 1, 7], [0, 7, 10], [0, 10, 11], [1, 5, 9], [5, 11, 4], [11, 10, 2], [10, 7, 6], [7, 1, 8], [3, 9, 4], [3, 4, 2], [3, 2, 6], [3, 6, 8], [3, 8, 9], [4, 9, 5], [2, 4, 11], [6, 2, 10], [8, 6, 7], [9, 8, 1]]
 }
+
+
+def generate_3d_shell(n, r=1):
+	"""Get x, y, and z coordinates of uniformly sampled points on a 3D shell
+	:param n: number of subdivisions
+	:param r: radius of shell
+	:return: lists of x, y, and z coordinates of points on shell surface
+	"""
+
+	alpha = 4.0*np.pi*r*r/n
+	d = np.sqrt(alpha)
+	m_nu = int(np.round(np.pi/d))
+	d_nu = np.pi/m_nu
+	d_phi = alpha/d_nu
+
+	x = []
+	y = []
+	z = []
+	for m in range (0,m_nu):
+		nu = np.pi*(m+0.5)/m_nu
+		m_phi = int(np.round(2*np.pi*np.sin(nu)/d_phi))
+		for n in range (0,m_phi):
+			phi = 2*np.pi*n/m_phi
+			x.append(r*np.sin(nu)*np.cos(phi))
+			y.append(r*np.sin(nu)*np.sin(phi))
+			z.append(r*np.cos(nu))
+	return x, y, z
 
     
 def fully_connect_mesh(verts):
