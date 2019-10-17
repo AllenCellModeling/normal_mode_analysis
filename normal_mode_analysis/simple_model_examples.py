@@ -63,12 +63,39 @@ model_faces = {
 
 
 def trimesh_3D_surface(r, ss, fig_flag=True):
-	"""Create triangular mesh surface using marching cubes (surfaces approximates a sphere)
-	:param r: sphere radius
-	:param ss: step size for marching cubes algorithm
-	:param fig_flag: flag where to draw scatter plot of object vertices
-	:return: vertices and faces of mesh
-	"""
+    """Create 3D surface mesh that approaches a sphere as vertices are added.
+    :param r: sphere radius
+    :param ss: step size for marching cubes meshing
+    :param fig_flag: toggle whether to scatter plot mesh vertices
+    :return: vertices and faces of resulting mesh
+    """
+    
+    # Create spherical mask
+    size=2*r+3
+    center = np.array([(size-1)/2, (size-1)/2, (size-1)/2])
+    mask = np.zeros((size,size,size))
+    for i in range(size):
+        for j in range(size):
+            for k in range(size):
+                if np.linalg.norm(np.array([i,j,k])-center)<=r:
+                    mask[i,j,k] = 1
+                    
+    # mesh the mask into verts and faces
+    verts, faces, n, v = measure.marching_cubes_lewiner(mask, step_size=ss)
+    print("number of vertices: "+str(verts.shape[0]))
+    
+    # Plot verices (optional)
+    if fig_flag:
+        x = [verts[i][0] for i in range(verts.shape[0])]
+        y = [verts[i][1] for i in range(verts.shape[0])]
+        z = [verts[i][2] for i in range(verts.shape[0])]
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.scatter(x,y,z)
+        
+    return verts, faces
+
     
     # Create spherical mask
     size=2*r+3
