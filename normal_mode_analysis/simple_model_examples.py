@@ -6,6 +6,7 @@ from scipy.sparse.linalg import eigsh
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import seaborn as sb
+from skimage import measure
 
 
 sb.set_palette(sb.color_palette("Set2"))
@@ -40,8 +41,8 @@ model_verts = {
     # 3D tetrahedron
     '3D_th': np.array([[1.,0.,0.], [0.5, np.sqrt(3)/2.,0.], [0.,0.,0.], [np.sqrt(3)/2., np.sqrt(3)/2., 1.] ]),
 	
-	# 3D icosahedron
-	'3D_ico': np.array([[-1, ico, 0], [1, ico, 0], [-1, -ico, 0], [1, -ico, 0], [0, -1, ico], [0, 1, ico], [0, -1, -ico], [0, 1, -ico], 
+    # 3D icosahedron
+    '3D_ico': np.array([[-1, ico, 0], [1, ico, 0], [-1, -ico, 0], [1, -ico, 0], [0, -1, ico], [0, 1, ico], [0, -1, -ico], [0, 1, -ico], 
 						[ico, 0, -1], [ico, 0, 1], [-ico, 0, -1], [-ico, 0, 1]])
 
 }
@@ -57,37 +58,44 @@ model_faces = {
     '3D_cb': [[0,1], [1,2], [2,3], [3,0], [4,5], [5,6], [6,7], [7,0], [0,4], [1,5], [2,6], [3,7]],
     '2D_tr': [[0,1], [1,2], [2,0]],
     '3D_th': [[0,1], [1,2], [2,0], [0,3], [1,3], [2,3]],
-	'3D_ico': [ [0, 11, 5], [0, 5, 1], [0, 1, 7], [0, 7, 10], [0, 10, 11], [1, 5, 9], [5, 11, 4], [11, 10, 2], [10, 7, 6], [7, 1, 8], [3, 9, 4], [3, 4, 2], [3, 2, 6], [3, 6, 8], [3, 8, 9], [4, 9, 5], [2, 4, 11], [6, 2, 10], [8, 6, 7], [9, 8, 1]]
+    '3D_ico': [ [0, 11, 5], [0, 5, 1], [0, 1, 7], [0, 7, 10], [0, 10, 11], [1, 5, 9], [5, 11, 4], [11, 10, 2], [10, 7, 6], [7, 1, 8], [3, 9, 4], [3, 4, 2], [3, 2, 6], [3, 6, 8], [3, 8, 9], [4, 9, 5], [2, 4, 11], [6, 2, 10], [8, 6, 7], [9, 8, 1]]
 }
 
 
-def generate_3d_shell(n, r=1):
-	"""Get x, y, and z coordinates of uniformly sampled points on a 3D shell
-	:param n: number of subdivisions
-	:param r: radius of shell
-	:return: lists of x, y, and z coordinates of points on shell surface
+def trimesh_3D_surface(r, ss, fig_flag=True):
+	"""Create triangular mesh surface using marching cubes (surfaces approximates a sphere)
+	:param r: sphere radius
+	:param ss: step size for marching cubes algorithm
+	:param fig_flag: flag where to draw scatter plot of object vertices
+	:return: vertices and faces of mesh
 	"""
-
-	alpha = 4.0*np.pi*r*r/n
-	d = np.sqrt(alpha)
-	m_nu = int(np.round(np.pi/d))
-	d_nu = np.pi/m_nu
-	d_phi = alpha/d_nu
-
-	x = []
-	y = []
-	z = []
-	for m in range (0,m_nu):
-		nu = np.pi*(m+0.5)/m_nu
-		m_phi = int(np.round(2*np.pi*np.sin(nu)/d_phi))
-		for n in range (0,m_phi):
-			phi = 2*np.pi*n/m_phi
-			x.append(r*np.sin(nu)*np.cos(phi))
-			y.append(r*np.sin(nu)*np.sin(phi))
-			z.append(r*np.cos(nu))
-	return x, y, z
-
     
+    # Create spherical mask
+    size=2*r+3
+    center = np.array([(size-1)/2, (size-1)/2, (size-1)/2])
+    mask = np.zeros((size,size,size))
+    for i in range(size):
+        for j in range(size):
+            for k in range(size):
+                if np.linalg.norm(np.array([i,j,k])-center)<=r:
+                    mask[i,j,k] = 1
+                    
+    # mesh the mask into verts and faces
+    verts, faces, n, v = measure.marching_cubes_lewiner(mask, step_size=ss)
+    print("number of vertices: "+str(verts.shape[0]))
+    
+    if fig_flag:
+        x = [verts[i][0] for i in range(verts.shape[0])]
+        y = [verts[i][1] for i in range(verts.shape[0])]
+        z = [verts[i][2] for i in range(verts.shape[0])]
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.scatter(x,y,z, color='k')
+		
+    return verts, faces
+    
+	
 def fully_connect_mesh(verts):
     """Connects all vertices in input mesh to all other vertices. Returns faces.
     :param verts: mesh vertices
