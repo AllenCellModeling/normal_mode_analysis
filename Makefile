@@ -49,9 +49,9 @@ build: ## run tox / run tests and lint
 	tox
 
 gen-docs: ## generate Sphinx HTML documentation, including API docs
-	rm -f docs/{{cookiecutter.project_slug}}.rst
+	rm -f docs/normal_mode_analysis*.rst
 	rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ {{ cookiecutter.project_slug }} **/tests/
+	sphinx-apidoc -o docs/ normal_mode_analysis **/tests/
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 
