@@ -57,16 +57,16 @@ def get_mask_from_mesh(polydata, imsize, dz):
 	zmin = min(z_list)
 	zmax = max(z_list)
 	
-	def get_zslice(n):
+	def get_zslice(z_ind):
 		"""Use meshcut to get z slices of mesh, create 2D masks of each slice, and combine slices to get 3D mask.
-		:param n: index of z slice mask to cut from mesh
+		:param z_ind: index of z slice mask to cut from mesh
 		:return: 2D image as binary mask of z slice at this index
 		"""
 
 		im = Image.fromarray(np.zeros((imsize,imsize), np.uint8).T)
 
-		if zmin < n < zmax:
-			cut = meshcut.cross_section(verts_shift, faces, [0,0,n], [0,0,1])
+		if zmin < z_ind < zmax:
+			cut = meshcut.cross_section(verts_shift, faces, [0,0,z_ind], [0,0,1])
 			polygon = cut[0][:, :2]
 
 			draw = ImageDraw.Draw(im)
