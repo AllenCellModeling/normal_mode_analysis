@@ -95,32 +95,6 @@ def trimesh_3D_surface(r, ss, fig_flag=True):
         ax.scatter(x,y,z)
         
     return verts, faces
-
-    
-    # Create spherical mask
-    size=2*r+3
-    center = np.array([(size-1)/2, (size-1)/2, (size-1)/2])
-    mask = np.zeros((size,size,size))
-    for i in range(size):
-        for j in range(size):
-            for k in range(size):
-                if np.linalg.norm(np.array([i,j,k])-center)<=r:
-                    mask[i,j,k] = 1
-                    
-    # mesh the mask into verts and faces
-    verts, faces, n, v = measure.marching_cubes_lewiner(mask, step_size=ss)
-    print("number of vertices: "+str(verts.shape[0]))
-    
-    if fig_flag:
-        x = [verts[i][0] for i in range(verts.shape[0])]
-        y = [verts[i][1] for i in range(verts.shape[0])]
-        z = [verts[i][2] for i in range(verts.shape[0])]
-
-        fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d')
-        ax.scatter(x,y,z, color='k')
-		
-    return verts, faces
     
 	
 def fully_connect_mesh(verts):
