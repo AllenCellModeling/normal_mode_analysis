@@ -130,13 +130,13 @@ def fix_z(verts, dz, imsize):
 	return verts
 	
 	
-def get_mean_mesh(mask):
+def get_mean_mesh(mask, ss=1):
 	"""Get mean mesh from mean mask, correcting z coordinates from zslice indexes to spatial values consistent with x/y.
 	:param mask: 3D binary image mask of average nuclear shape
 	:return: vertices and faces of mesh generated from mask
 	"""
 
-	verts, faces, normals, values = measure.marching_cubes_lewiner(mask)
+	verts, faces, normals, values = measure.marching_cubes_lewiner(mask, step_size=ss)
 	nverts = verts.shape[0]
 	verts = fix_z(verts, 0.05, 200)
 	
