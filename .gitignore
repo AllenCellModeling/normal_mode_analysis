@@ -105,3 +105,4 @@ ENV/
 # mypy
 .mypy_cache/
 normal_mode_analysis/nucleus_data/mean_nuc_mask.npy
+normal_mode_analysis/nucleus_mesh_data/mean_nuc_mask.npy
