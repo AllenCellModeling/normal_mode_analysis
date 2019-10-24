@@ -96,7 +96,7 @@ def get_mean_mask(df, imsize, dz):
 
 		reader = vtk.vtkPolyDataReader()
 		# read in a specific file
-		reader.SetFileName('mesh_vtk_files/'+df['CellId'][i]+'.vtk')
+		reader.SetFileName('nucleus_mesh_data/mesh_vtk_files/'+df['CellId'][i]+'.vtk')
 		reader.Update()
 		# get data out of file
 		polydata = reader.GetOutput()
