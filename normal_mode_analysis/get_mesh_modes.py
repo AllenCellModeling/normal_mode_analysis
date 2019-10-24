@@ -36,7 +36,11 @@ def get_hessian_from_mesh(verts, faces):
                 xyz1 = verts[i]
                 xyz2 = verts[j]
                 R = np.linalg.norm(xyz1-xyz2)
-                val = -(xyz2[ind2] - xyz1[ind2])*(xyz2[ind1] - xyz1[ind1])/(R**2)
+                if R==0:
+                    val = 0
+                    print('Identical vertices found at indices '+str(i)+' and '+str(j))
+                else:
+                    val = -(xyz2[ind2] - xyz1[ind2])*(xyz2[ind1] - xyz1[ind1])/(R**2)
                 hess[npts*ind1 + i, npts*ind2 + j] = val
                 hess[npts*ind2 + j, npts*ind1 + i] = val
                 hess[npts*ind1 + j, npts*ind2 + i] = val
