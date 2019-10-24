@@ -111,7 +111,7 @@ def get_mean_mask(df, imsize, dz):
 		
 	mean_mask = np.divide(sum_mask, df.shape[0])
 
-	np.save('mean_nuc_mask', mean_mask)
+	np.save('mean_nuc_mask_dz_'+str(dz), mean_mask)
 	return mean_mask
 
 
