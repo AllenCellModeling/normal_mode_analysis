@@ -1,6 +1,9 @@
 # install Blender 2.8:
 # https://www.blender.org/download/
 #
+# in this script, set desired parameters: mesh density (integer 1-10) and mesh type (nucleus or icosphere)
+# in this script, set the file path to the stl mesh you want to use
+#
 # start Blender with python interpreter:
 # /Applications/Blender.app/Contents/MacOS/Blender --python-console
 #
