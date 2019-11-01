@@ -113,3 +113,5 @@ normal_mode_analysis/nucleus_nma/eigvecs_nuc_mesh_5.npy
 normal_mode_analysis/nucleus_nma/hessian.npy
 normal_mode_analysis/nucleus_nma/hessian_nuc_mesh_2538.npy
 normal_mode_analysis/nucleus_mesh_data/mean_nuc_mask_dz_0.05.npy
+normal_mode_analysis/nucleus_mesh_data/marching_cubes_meshes/mean_nuc_mask_dz_0.05.npy
+normal_mode_analysis/nucleus_mesh_data/marching_cubes_meshes/mean_nuc_mask_dz_0.025.npy
