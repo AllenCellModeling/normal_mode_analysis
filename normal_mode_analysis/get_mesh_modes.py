@@ -58,7 +58,7 @@ def get_hessian_from_mesh(verts, faces):
     return hess
     
     
-def get_eigs_from_mesh(verts, faces, save_flag = False, fname=None):
+def get_eigs_from_mesh(verts, faces, save_flag = False, fname = None):
     """Get eigenvalues and eigenvectors of hessian, calculated from vertices and faces defining mesh.
     :param verts: vertices of mesh
     :param faces: faces of mesh
@@ -68,7 +68,8 @@ def get_eigs_from_mesh(verts, faces, save_flag = False, fname=None):
 
     # calculate hessian from faces and vertices as initial conditions with zero potential energy (rest shape)
     mat = get_hessian_from_mesh(verts, faces)
-    np.save('nucleus_nma/hessian_'+fname, mat)
+    if save_flag:
+        np.save('nucleus_nma/hessian_'+fname, mat)
     
     # use solver to get eigenvalues (w) and eigenvectors (v)
     w, v = np.linalg.eigh(mat)
