@@ -1,0 +1,53 @@
+normal\_mode\_analysis package
+==============================
+
+Subpackages
+-----------
+
+.. toctree::
+
+   normal_mode_analysis.bin
+
+Submodules
+----------
+
+normal\_mode\_analysis.generate\_uniform\_nuc\_trimesh module
+-------------------------------------------------------------
+
+.. automodule:: normal_mode_analysis.generate_uniform_nuc_trimesh
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+normal\_mode\_analysis.get\_mesh\_modes module
+----------------------------------------------
+
+.. automodule:: normal_mode_analysis.get_mesh_modes
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+normal\_mode\_analysis.mean\_nuc\_mesh\_from\_data module
+---------------------------------------------------------
+
+.. automodule:: normal_mode_analysis.mean_nuc_mesh_from_data
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+normal\_mode\_analysis.simple\_model\_examples module
+-----------------------------------------------------
+
+.. automodule:: normal_mode_analysis.simple_model_examples
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: normal_mode_analysis
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,7 @@
+normal_mode_analysis
+====================
+
+.. toctree::
+   :maxdepth: 4
+
+   normal_mode_analysis

@@ -1,0 +1,22 @@
+normal\_mode\_analysis.bin package
+==================================
+
+Submodules
+----------
+
+normal\_mode\_analysis.bin.my\_example module
+---------------------------------------------
+
+.. automodule:: normal_mode_analysis.bin.my_example
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: normal_mode_analysis.bin
+   :members:
+   :undoc-members:
+   :show-inheritance:
