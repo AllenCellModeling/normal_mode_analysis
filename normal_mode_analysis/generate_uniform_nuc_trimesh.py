@@ -18,13 +18,21 @@ import numpy as np
 
 # parameters
 mesh_type = 'nucleus' # set to either 'nucleus' or 'icosphere'
-mesh_density = 5 # 1-10 (but 10 creates like 5 million vertices)
-object_name = 'Mean Nuc Mesh' # blender sets mesh object name from input file name, so this should match
 
-# replace "local_path" with your own repo's local path
-local_path = '/Users/juliec/projects'
-repo_path = '/normal_mode_analysis/normal_mode_analysis/nucleus_mesh_data/sample_trimeshes_from_blair/'
-input_mesh_path = local_path + repo_path + 'mean_nuc_mesh.stl'
+mesh_density = 5 # 1-10 (but 10 creates like 5 million vertices)
+object_name = 'Mean Nuc Mesh Dz 0.025 V 602934' # blender sets mesh object name from input file name, so this should match
+
+local_path = '/Users/juliec/projects/'   # replace "local_path" with your own repo's local path
+repo_path = 'normal_mode_analysis/normal_mode_analysis/nucleus_mesh_data/' 
+mesh_dir = 'marching_cubes_meshes/' #sample_trimeshes_from_blair/'
+
+dz = 0.025
+v = 602934
+filename = 'mean_nuc_mesh_dz_'+str(dz)+'_v_'+str(v)+'.stl'
+
+input_mesh_path = local_path + repo_path + mesh_dir + filename
+
+
 if mesh_type == 'nucleus':
 	output_path = local_path + repo_path + 'mean_nuc_mesh_uniform_{}'.format(mesh_density)
 elif mesh_type == 'icosphere':
@@ -66,7 +74,7 @@ if mesh_type == 'nucleus':
 	bpy.ops.object.modifier_apply(apply_as='DATA', modifier='shrinkwrap')
 
 # export STL file
-if mesh_type == 'nucleus'
+if mesh_type == 'nucleus':
 	input_mesh.select_set(False)
 output_mesh.select_set(True)
 mesh_output_path = '{}.stl'.format(output_path)
