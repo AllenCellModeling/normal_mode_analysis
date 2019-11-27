@@ -101,7 +101,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#normal-mode-analysis-generate-uniform-nuc-trimesh-module">normal_mode_analysis.generate_uniform_nuc_trimesh module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-normal_mode_analysis.get_mesh_modes">normal_mode_analysis.get_mesh_modes module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#normal-mode-analysis-get-mesh-modes-module">normal_mode_analysis.get_mesh_modes module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#normal-mode-analysis-mean-nuc-mesh-from-data-module">normal_mode_analysis.mean_nuc_mesh_from_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#normal-mode-analysis-simple-model-examples-module">normal_mode_analysis.simple_model_examples module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-normal_mode_analysis">Module contents</a></li>
@@ -211,27 +211,8 @@
 <div class="section" id="normal-mode-analysis-generate-uniform-nuc-trimesh-module">
 <h2>normal_mode_analysis.generate_uniform_nuc_trimesh module<a class="headerlink" href="#normal-mode-analysis-generate-uniform-nuc-trimesh-module" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-normal_mode_analysis.get_mesh_modes">
-<span id="normal-mode-analysis-get-mesh-modes-module"></span><h2>normal_mode_analysis.get_mesh_modes module<a class="headerlink" href="#module-normal_mode_analysis.get_mesh_modes" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="normal_mode_analysis.get_mesh_modes.get_eigs_from_mesh">
-<code class="sig-prename descclassname">normal_mode_analysis.get_mesh_modes.</code><code class="sig-name descname">get_eigs_from_mesh</code><span class="sig-paren">(</span><em class="sig-param">verts</em>, <em class="sig-param">faces</em>, <em class="sig-param">save_flag=False</em>, <em class="sig-param">fname=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/normal_mode_analysis/get_mesh_modes.html#get_eigs_from_mesh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#normal_mode_analysis.get_mesh_modes.get_eigs_from_mesh" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get eigenvalues and eigenvectors of hessian, calculated from vertices and faces defining mesh.
-:param verts: vertices of mesh
-:param faces: faces of mesh
-:param save_flag: flag to save eigenvalues and eigenvectors to file
-:return: hessian, and its eigenvalues (w) and eigenvectors (v) (v[:,i] correcsponds to w[i])</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="normal_mode_analysis.get_mesh_modes.get_hessian_from_mesh">
-<code class="sig-prename descclassname">normal_mode_analysis.get_mesh_modes.</code><code class="sig-name descname">get_hessian_from_mesh</code><span class="sig-paren">(</span><em class="sig-param">verts</em>, <em class="sig-param">faces</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/normal_mode_analysis/get_mesh_modes.html#get_hessian_from_mesh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#normal_mode_analysis.get_mesh_modes.get_hessian_from_mesh" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find Hessian for mesh defined by input vertices and faces.
-:param verts: vertices of mesh
-:param faces: faces of mesh
-:return: hessian matrix describing connectivity of mesh</p>
-</dd></dl>
-
+<div class="section" id="normal-mode-analysis-get-mesh-modes-module">
+<h2>normal_mode_analysis.get_mesh_modes module<a class="headerlink" href="#normal-mode-analysis-get-mesh-modes-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="normal-mode-analysis-mean-nuc-mesh-from-data-module">
 <h2>normal_mode_analysis.mean_nuc_mesh_from_data module<a class="headerlink" href="#normal-mode-analysis-mean-nuc-mesh-from-data-module" title="Permalink to this headline">¶</a></h2>
