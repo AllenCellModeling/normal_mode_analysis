@@ -11,6 +11,14 @@ Subpackages
 Submodules
 ----------
 
+normal\_mode\_analysis.color\_vertices module
+---------------------------------------------
+
+.. automodule:: normal_mode_analysis.color_vertices
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 normal\_mode\_analysis.generate\_uniform\_nuc\_trimesh module
 -------------------------------------------------------------
 
