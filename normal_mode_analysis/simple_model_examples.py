@@ -92,7 +92,7 @@ def trimesh_3D_surface(r, ss, fig_flag=True):
 
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
-        ax.scatter(x,y,z)
+        ax.scatter(x,y,z, color='k')
         
     return verts, faces
     
@@ -182,8 +182,12 @@ def nma_polygon(r, N=100, fully_connect=False, draw=False):
     
     if draw:
         sb.distplot(w, kde=False, bins=N*5)
+        plt.xlabel('Energy *(m/k)')
+        plt.ylabel('Number of Modes')
+        plt.savefig('hist.pdf', format='pdf')
         plt.figure()
         draw_init_modes(verts, faces, v, w)
+        plt.savefig('modes.pdf', format='pdf')
         
     return w, v
 
@@ -271,7 +275,7 @@ def draw_init_modes(verts, faces, v, w):
     npts = verts.shape[0]
 
     # set up axes to plot all normal modes
-    psize = 3
+    psize = 4
     fig, ax = plt.subplots(figsize=[psize*ndim,psize*npts], nrows=npts, ncols=ndim)
 
     # cycle through all normal modes (N = npts*ndim)
@@ -284,7 +288,12 @@ def draw_init_modes(verts, faces, v, w):
             axis = ax[int(j%npts)]
 
         # set plot title to mode frequency
-        axis.title.set_text('w = '+str(np.round(w[j],2)))
+        ww = np.round(w[j],2)
+        if ww == 0:
+            ww = str(0)
+        else:
+            ww = str(ww) +' k/m'
+        axis.title.set_text(r'$w^2 = $'+ ww)
 
         axis = draw_mode(verts, faces, v[:, j], axis)
 
