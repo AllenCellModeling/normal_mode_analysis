@@ -1,4 +1,6 @@
 import numpy as np
+from stl import mesh
+import pandas as pd
 import itertools
 from scipy.sparse.linalg import eigsh
 
@@ -79,3 +81,33 @@ def get_eigs_from_mesh(verts, faces, save_flag = False, fname = None):
         np.save('nucleus_nma/eigvecs_'+fname, v)
     
     return mat, w, v
+
+
+def process_all_eigvecs(res, v=None, w=None):
+    
+    # set path to look for nuclear mesh info
+    verts = np.load('nucleus_mesh_data/sample_trimeshes_from_blair/mean_nuc_mesh_uniform_'+str(res)+'_vertices.npy')
+
+    if v is None:
+        # load normal mode analysis results for this mesh
+        v = np.load('nucleus_nma/eigvecs_nuc_mesh_'+str(res)+'.npy')
+        w = np.load('nucleus_nma/eigvals_nuc_mesh_'+str(res)+'.npy')
+    
+    # get shape parameters
+    nverts = verts.shape[0]
+    ndim = verts.shape[1]
+    nmodes = v.shape[1]
+    
+    # fill dataframe with a row for each mode
+    # each row contains the frequency, and list of eigenvectors and their magnitudes
+    # these vecotrs and magnitudes are listed in the same order as the stl mesh vertex order
+    eigeninfo = pd.DataFrame(columns=['vecs', 'mags'])
+    for j in range(nmodes):
+        vecs = [[v[i,j], v[i+nverts,j], v[i+2*nverts,j]] for i in range(nverts)]
+        mags = [np.linalg.norm(vecs[i], axis=0) for i in range(nverts)]
+        mags /= max(mags)
+        eigeninfo = eigeninfo.append({'vecs': vecs, 'mags': mags, 'mode w':w[j]}, ignore_index=True)
+    
+    # save and return dataframe
+    eigeninfo.to_pickle('nucleus_nma/mode_table_nuc_mesh_'+str(res)+'.pickle')
+    return eigeninfo
