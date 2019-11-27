@@ -17,6 +17,9 @@ import meshcut
 import imageio
 import os
 
+from tqdm import tqdm_notebook as tqdm
+from joblib import Parallel, delayed
+
 
 def create_csv_from_database():
 	"""Download nuclear mesh databse with dsdb and save in repo.
@@ -28,6 +31,74 @@ def create_csv_from_database():
 	df.to_csv("mesh_vtk_files/nucleus_timelapse.csv")
 	
 	return df
+
+
+def get_mesh_polydata(df, i):
+		"""Read database to get one mesh as polydata.
+        :param df: dataframe of nucleus segmentations
+		:param i: index of segmentation in dataset
+		:return polydata mesh for this segmentation
+		"""
+
+		reader = vtk.vtkPolyDataReader()
+		# read in a specific file
+		reader.SetFileName('nucleus_mesh_data/mesh_vtk_files/'+df['CellId'][i]+'.vtk')
+		reader.Update()
+		# get data out of file
+		polydata = reader.GetOutput()
+        
+		return polydata
+    
+def get_binary_mask_from_mesh(polydata, imsize, save_flag = False):
+    """Given a polydata mesh, create a binary 3D mask, centered on the mask image center.
+	:param polydata: vtk 3D mesh
+    :return 3d mask array:
+	"""
+    
+    # Create a empty template mask
+    nx = imsize[0]
+    ny = imsize[1]
+    nz = imsize[2]
+    mask = np.zeros((nz,ny,nx), dtype=np.uint8)
+    yy, xx = np.meshgrid(np.arange(ny),np.arange(nx))
+    x = xx.flatten()
+    y = yy.flatten()
+
+    n_verts = len(y)
+    vert_is_inside = np.zeros(n_verts, dtype=np.uint8)
+
+    xypts = vtk.vtkPoints()
+    xypts.SetNumberOfPoints(n_verts)
+    for i in range(n_verts):
+        xypts.SetPoint(i,[x[i],y[i],0])
+
+    # Loop over Z in parallel
+    def ProcessThisPlane(mask, z):
+
+        for i in range(n_verts):
+            xypts.SetPoint(i,[x[i],y[i],z])
+
+        plane = vtk.vtkPolyData()
+        plane.SetPoints(xypts)
+        plane.Modified()
+        encPoints = vtk.vtkSelectEnclosedPoints()
+        encPoints.SetTolerance(1e-6)
+        encPoints.SetInputData(plane)
+        encPoints.SetSurfaceData(polydata)
+        encPoints.Update()
+
+        for i in range(n_verts):
+            vert_is_inside[i] = encPoints.IsInside(i)
+
+        mask[z,y,x] = 255*vert_is_inside
+
+    Parallel(n_jobs=2, backend="threading")(
+        delayed(ProcessThisPlane)(mask, z) for z in tqdm(range(nz))
+    )
+
+    if save_flag:
+        skio.imsave('nucleus_mask_data/'+df['CellId'][i]+'.tif', mask)
+    return mask
 
 
 def get_mask_from_mesh(polydata, imsize, dz):
@@ -80,38 +151,26 @@ def get_mask_from_mesh(polydata, imsize, dz):
 	return mask
 
 	
-def get_mean_mask(df, imsize, dz):
+def get_mean_mask(df, imsize):
 	"""Given many meshes in df, find the average binary image mask of all meshes.
 	:param df: dataframe containing segmentation filepaths
 	:param imsize: size of binary mask image
 	:param dz: resolution of z slices
 	:return: 3D mean nuclear mask image array
 	"""
-	
-	def get_mesh(i):
-		"""Read database to get one mesh as polydata.
-		:param i: index of segmentation in dataset
-		:return polydata mesh for this segmentation
-		"""
 
-		reader = vtk.vtkPolyDataReader()
-		# read in a specific file
-		reader.SetFileName('nucleus_mesh_data/mesh_vtk_files/'+df['CellId'][i]+'.vtk')
-		reader.Update()
-		# get data out of file
-		polydata = reader.GetOutput()
-		return polydata
-
-	polydata = get_mesh(0)
-	sum_mask = get_mask_from_mesh(polydata, imsize, dz)
-
+	polydata = get_mesh_polydata(df, 0)
+	# sum_mask = get_mask_from_mesh(polydata, imsize, dz)
+	sum_mask = get_binary_mask_from_mesh(polydata, imsize)
+   
 	for i in range(df.shape[0]):
-		polydata = get_mesh(i)
-		sum_mask = np.add(sum_mask, get_mask_from_mesh(polydata, imsize, dz))
+		polydata = get_mesh_polydata(df, i)
+		#sum_mask = np.add(sum_mask, get_mask_from_mesh(polydata, imsize, dz))
+		sum_mask = np.add(sum_mask, get_binary_mask_from_mesh(polydata, imsize))
 		
 	mean_mask = np.divide(sum_mask, df.shape[0])
 
-	np.save('nucleus_mesh_data/mean_nuc_mask_dz_'+str(dz), mean_mask)
+	np.save('nucleus_mesh_data/mean_nuc_mask', mean_mask)
 	return mean_mask
 
 
@@ -130,20 +189,17 @@ def fix_z(verts, dz, imsize):
 	return verts
 	
 	
-def get_mean_mesh(mask, imsize, dz, ss=1):
+def get_mean_mesh(mask, ss=1):
 	"""Get mean mesh from mean mask, correcting z coordinates from zslice indexes to spatial values consistent with x/y.
 	:param mask: 3D binary image mask of average nuclear shape
 	:return: vertices and faces of mesh generated from mask
 	"""
 
 	verts, faces, normals, values = measure.marching_cubes_lewiner(mask, step_size=ss)
-	nverts = verts.shape[0]
-	verts = fix_z(verts, dz, imsize)
-	
 	return verts, faces
 	
 
-def get_mean_mesh_from_individual_meshes(df, imsize=200, dz=0.05):
+def get_mean_mesh_from_individual_meshes(df, imsize):
 	"""Master function, getting mean mesh shape from df of meshes.
 	:param df: dataframe containing segmentation dataset
 	:param imsize: size of binary mask image
@@ -151,8 +207,8 @@ def get_mean_mesh_from_individual_meshes(df, imsize=200, dz=0.05):
 	:return: vertices and faces of average nuclear mesh
 	"""
 
-	mask = get_mean_mask(df, imsize, dz)
-	verts, faces = get_mean_mesh(mask, imsize, dz)
+	mask = get_mean_mask(df, imsize)
+	verts, faces = get_mean_mesh(mask, imsize)
 	return verts, faces, mask
 
 
