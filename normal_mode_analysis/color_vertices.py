@@ -15,20 +15,24 @@ import pandas as pd
 
 mesh = 4
 mode = 0
-file = 'mesh_'+str(mesh)+'_mode_'+str(mode)
+# file = 'mesh_'+str(mesh)+'_mode_'+str(mode)
+file = 'ico_mesh_'+str(mesh)+'_mode_'+str(mode)
 
 # setup
 local = '/Users/juliec/projects/'   # replace "local_path" with your own repo's local path
 repo = local+'normal_mode_analysis/normal_mode_analysis/' 
 
 # input mesh file path
-mesh_input_file_path = repo+'nucleus_mesh_data/sample_trimeshes_from_blair/mean_nuc_mesh_uniform_'+str(mesh)'.stl'
+# mesh_input_file_path = repo+'nucleus_mesh_data/sample_trimeshes_from_blair/mean_nuc_mesh_uniform_'+str(mesh)'.stl'
+mesh_input_file_path = repo+'nucleus_mesh_data/sample_trimeshes_from_blair/icosphere_'+str(mesh)+'.stl'
 
 # results file path
 output_file_path = repo+'nucleus_nma_heatmaps/'+file+'_colored.blend'
 
 # input eigvec coloring values
-eigvec_data = pd.read_pickle(repo+'nucleus_nma/mode_table_nuc_mesh_'+str(mesh)'.pickle')
+# eigvec_data = pd.read_pickle(repo+'nucleus_nma/mode_table_nuc_mesh_'+str(mesh)'.pickle')
+eigvec_data = pd.read_pickle(repo+'nucleus_nma/mode_table_ico_mesh_'+str(res)+'.pickle')
+# colors_input_file_path = repo+'nucleus_nma/'+file+'_mags.npy'
 colors_input_file_path = repo+'nucleus_nma/'+file+'_mags.npy'
 vecs = np.save(colors_input_file_path, eigvec_data.iloc[mode]['mags'])
 

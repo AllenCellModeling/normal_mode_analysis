@@ -83,10 +83,14 @@ def get_eigs_from_mesh(verts, faces, save_flag = False, fname = None):
     return mat, w, v
 
 
-def process_all_eigvecs(res, v=None, w=None):
+def process_all_eigvecs(res, shape='nuc', v=None, w=None):
     
     # set path to look for nuclear mesh info
-    verts = np.load('nucleus_mesh_data/sample_trimeshes_from_blair/mean_nuc_mesh_uniform_'+str(res)+'_vertices.npy')
+    if shape=='nuc':
+        verts = np.load('nucleus_mesh_data/sample_trimeshes_from_blair/mean_nuc_mesh_uniform_'+str(res)+'_vertices.npy')
+    else:
+        verts = np.load('nucleus_mesh_data/sample_trimeshes_from_blair/icosphere_'+str(res)+'_vertices.npy')
+
 
     if v is None:
         # load normal mode analysis results for this mesh
@@ -109,5 +113,8 @@ def process_all_eigvecs(res, v=None, w=None):
         eigeninfo = eigeninfo.append({'vecs': vecs, 'mags': mags, 'mode w':w[j]}, ignore_index=True)
     
     # save and return dataframe
-    eigeninfo.to_pickle('nucleus_nma/mode_table_nuc_mesh_'+str(res)+'.pickle')
+    if shape=='nuc':
+        eigeninfo.to_pickle('nucleus_nma/mode_table_nuc_mesh_'+str(res)+'.pickle')
+    else:
+        eigeninfo.to_pickle('nucleus_nma/mode_table_ico_mesh_'+str(res)+'.pickle')
     return eigeninfo
