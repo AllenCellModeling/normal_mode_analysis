@@ -6,11 +6,13 @@ from skimage import measure
 
 class Mesh():
 
-    def __init__(self, verts, faces):
+    def __init__(self, verts, faces, name):
         """Creates a mesh object in any # of spatial dimensions, constructed with input vertices and faces.
         :param verts: Each item in the list is one vertex, and each vertex is a list of positions in each spatial dimension
         :param faces: Each item in list is a face, and each face is a list of vertices connected to make this face
+        :param name: name for this mesh, to identify/save/label
         """
+        self.name = name
         self.verts = verts
         self.faces = faces
         self.npts = int(verts.shape[0])
@@ -27,49 +29,49 @@ def mesh_from_models(model):
     model_verts = {
         
         # 1D 2 mass line
-        '1D_2m': np.array([[0.], [1.] ]),
+        '1D_2masses': np.array([[0.], [1.] ]),
         
         # 1D 3 mass line
-        '1D_3m': np.array([[0.,], [1.,], [2., ] ]),
+        '1D_3masses': np.array([[0.,], [1.,], [2., ] ]),
         
         # 3D 2 mass line
-        '3D_2m': np.array([[0., 0., 0.], [1., 0., 0.] ]),
+        '3D_2masses': np.array([[0., 0., 0.], [1., 0., 0.] ]),
         
         # 2D square
-        '2D_sq': np.array([[0.,0.], [0., 1.], [1.,1.], [1.,0.] ]),
+        '2D_square': np.array([[0.,0.], [0., 1.], [1.,1.], [1.,0.] ]),
         
         # 2D rectangle
-        '2D_rt': np.array([[0.,0.], [0., 1.], [0., 2.], [1.,2.], [1.,1.], [1.,0.] ]),
+        '2D_rectangle': np.array([[0.,0.], [0., 1.], [0., 2.], [1.,2.], [1.,1.], [1.,0.] ]),
         
         # 3D cube
-        '3D_cb': np.array([[0.,0.,0.], [0., 1.,0,], [1.,1.,0.], [1.,0.,0.],[0.,0.,1.], [0., 1.,1,], [1.,1.,1.], [1.,0.,1.] ]),
+        '3D_cube': np.array([[0.,0.,0.], [0., 1.,0,], [1.,1.,0.], [1.,0.,0.],[0.,0.,1.], [0., 1.,1,], [1.,1.,1.], [1.,0.,1.] ]),
         
         # 2D triangle
-        '2D_tr': np.array([[1.,0.], [0.5, np.sqrt(3)/2.], [0.,0.], ]),
+        '2D_triangle': np.array([[1.,0.], [0.5, np.sqrt(3)/2.], [0.,0.], ]),
         
         # 3D tetrahedron
-        '3D_th': np.array([[1.,0.,0.], [0.5, np.sqrt(3)/2.,0.], [0.,0.,0.], [np.sqrt(3)/2., np.sqrt(3)/2., 1.] ]),
+        '3D_tetrahedron': np.array([[1.,0.,0.], [0.5, np.sqrt(3)/2.,0.], [0.,0.,0.], [np.sqrt(3)/2., np.sqrt(3)/2., 1.] ]),
         
         # 3D icosahedron
-        '3D_ico': np.array([[-1, ico, 0], [1, ico, 0], [-1, -ico, 0], [1, -ico, 0], [0, -1, ico], [0, 1, ico], [0, -1, -ico], [0, 1, -ico], 
+        '3D_icosphere': np.array([[-1, ico, 0], [1, ico, 0], [-1, -ico, 0], [1, -ico, 0], [0, -1, ico], [0, 1, ico], [0, -1, -ico], [0, 1, -ico], 
                             [ico, 0, -1], [ico, 0, 1], [-ico, 0, -1], [-ico, 0, 1]])
 
     }
 
     # test model definitions: mesh connectivities (for each face, list contains a list of all vertex indeces for vertices each face connects)
     model_faces = {
-        '1D_2m': [[0,1],],
-        '1D_3m': [[0,1],[1,2]],
-        '3D_2m': [[0,1],],
-        '2D_sq': [[0,1], [1,2], [2,3], [3,0]],
-        '2D_rt': [[0,1], [1,2], [2,3], [3,4], [4,5], [5, 0]],
-        '3D_cb': [[0,1], [1,2], [2,3], [3,0], [4,5], [5,6], [6,7], [7,0], [0,4], [1,5], [2,6], [3,7]],
-        '2D_tr': [[0,1], [1,2], [2,0]],
-        '3D_th': [[0,1], [1,2], [2,0], [0,3], [1,3], [2,3]],
-        '3D_ico': [ [0, 11, 5], [0, 5, 1], [0, 1, 7], [0, 7, 10], [0, 10, 11], [1, 5, 9], [5, 11, 4], [11, 10, 2], [10, 7, 6], [7, 1, 8], [3, 9, 4], [3, 4, 2], [3, 2, 6], [3, 6, 8], [3, 8, 9], [4, 9, 5], [2, 4, 11], [6, 2, 10], [8, 6, 7], [9, 8, 1]]
+        '1D_2masses': [[0,1],],
+        '1D_3masses': [[0,1],[1,2]],
+        '3D_2masses': [[0,1],],
+        '2D_square': [[0,1], [1,2], [2,3], [3,0]],
+        '2D_rectangle': [[0,1], [1,2], [2,3], [3,4], [4,5], [5, 0]],
+        '3D_cube': [[0,1], [1,2], [2,3], [3,0], [4,5], [5,6], [6,7], [7,0], [0,4], [1,5], [2,6], [3,7]],
+        '2D_triangle': [[0,1], [1,2], [2,0]],
+        '3D_tetrahedron': [[0,1], [1,2], [2,0], [0,3], [1,3], [2,3]],
+        '3D_icosphere': [ [0, 11, 5], [0, 5, 1], [0, 1, 7], [0, 7, 10], [0, 10, 11], [1, 5, 9], [5, 11, 4], [11, 10, 2], [10, 7, 6], [7, 1, 8], [3, 9, 4], [3, 4, 2], [3, 2, 6], [3, 6, 8], [3, 8, 9], [4, 9, 5], [2, 4, 11], [6, 2, 10], [8, 6, 7], [9, 8, 1]]
     }
 
-    return Mesh(model_verts[model], model_faces[model])
+    return Mesh(model_verts[model], model_faces[model], model)
 
 
 def polygon_mesh(r=5, N=5, fully_connect=False):
@@ -81,6 +83,7 @@ def polygon_mesh(r=5, N=5, fully_connect=False):
     """
 
     verts = [np.array((math.cos(2*np.pi/N*x)*r, math.sin(2*np.pi/N*x)*r)) for x in range(0,N)]
+    name = '2D_polygon'+str(N)
     if not fully_connect:
         faces = []
         for i in range(N-1):
@@ -88,7 +91,8 @@ def polygon_mesh(r=5, N=5, fully_connect=False):
         faces.append([N-1,0])
     else:
         faces = fully_connect_mesh(verts)
-    return Mesh(np.array(verts), np.array(faces))
+        name+='x'
+    return Mesh(np.array(verts), np.array(faces), name)
 
 
 def volume_trimesh(r=5, ss=1, fully_connect=False):
@@ -111,9 +115,11 @@ def volume_trimesh(r=5, ss=1, fully_connect=False):
                     
     # mesh the mask into verts and faces
     verts, faces, n, v = measure.marching_cubes_lewiner(mask, step_size=ss)
+    name = '3D_sphere'+str(ss)
     if fully_connect:
         faces = fully_connect_mesh(verts)
-    return Mesh(verts, faces)
+        name+='x'
+    return Mesh(verts, faces, name)
     
 	
 def fully_connect_mesh(verts):

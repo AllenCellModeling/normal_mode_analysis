@@ -6,16 +6,15 @@ from scipy.sparse.linalg import eigsh
 
 class NMA():
 
-    def __init__(self, mesh, name=None, save_flag=False,):
+    def __init__(self, mesh, save_flag=True,):
         """Runs normal mode analysis on input mesh by calculating Hessian and its eigenvalues/vectors.
         :param mesh: Mesh object (from raw.py)
         :param save_flag: boolean flag setting whether to save NMA results
         :param model_dir: string giving name of directory to save NMA results in; None if save_flag is False
         """
-        self.mesh = mesh
-        self.hess = self.get_hessian_from_mesh(self.mesh)
-        self.w, self.v = self.get_eigs_from_mesh(self.hess, save_flag, name)
-        self.name = name
+        self.name = mesh.name
+        self.hess = self.get_hessian_from_mesh(mesh)
+        self.w, self.v = self.get_eigs_from_mesh(save_flag)
 
 
     def get_hessian_from_mesh(self, mesh):
@@ -65,7 +64,7 @@ class NMA():
         return hess
 
 
-    def get_eigs_from_mesh(self, hess, save_flag = False, model_dir = None):
+    def get_eigs_from_mesh(self, save_flag=True):
         """Get eigenvalues and eigenvectors of hessian.
         :param hess: hessian for mesh
         :param save_flag: flag to save hessian, eigenvalues and eigenvectors to file
@@ -73,13 +72,13 @@ class NMA():
         """
 
         # use solver to get eigenvalues (w) and eigenvectors (v)
-        w, v = np.linalg.eigh(hess)
+        w, v = np.linalg.eigh(self.hess)
 
         if save_flag:
-            save_dir = 'nma/'+model_dir
+            save_dir = 'data/nma/'+self.name
             if not os.path.exists(save_dir):
                 os.makedirs(save_dir)
-            np.save(save_dir+'/hessian', hess)
+            np.save(save_dir+'/hessian', self.hess)
             np.save(save_dir+'/eigvals', w)
             np.save(save_dir+'/eigvecs', v)
 
